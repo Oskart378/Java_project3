@@ -1,0 +1,66 @@
+import java.util.HashSet;
+
+public class Ticket {
+
+    private static final HashSet<Integer> usedIds = new HashSet<>();
+    private int id;
+    private String name;
+    private String issue;
+    private String priority;
+
+    public Ticket(int id, String name, String issue, String priority) {
+
+        if (id < 0)
+            throw new IllegalArgumentException("Id can't have negative values");
+        if (!isIdAvailable(id))
+            throw new IllegalArgumentException("Id is already used, try a different Id number");
+        if (name == null || name.isBlank())
+            throw new IllegalArgumentException("Name can't be blank or null");
+        if(issue == null || issue.isBlank())
+            throw new IllegalArgumentException("Issue can't be blank or null");
+        if(!isValid(priority))
+            throw new IllegalArgumentException("Priority has to be one of the following values (low, medium or high)");
+
+        this.id = id;
+        this.name = name;
+        this.issue = issue;
+        this.priority = priority.toLowerCase();
+        usedIds.add(id);
+    }
+
+    private boolean isIdAvailable(int id) {
+        return !usedIds.contains(id);
+    }
+
+    private boolean isValid(String priority) {
+        priority = priority.toLowerCase();
+        return (priority.equals("low") || priority.equals("medium") ||
+                priority.equals("high"));
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getIssue() {
+        return issue;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", issue='" + issue + '\'' +
+                ", priority='" + priority + '\'' +
+                '}';
+    }
+}
