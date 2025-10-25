@@ -18,7 +18,7 @@ public class Ticket {
             throw new IllegalArgumentException("Name can't be blank or null");
         if(issue == null || issue.isBlank())
             throw new IllegalArgumentException("Issue can't be blank or null");
-        if(!isValid(priority))
+        if(priority == null || !isValid(priority))
             throw new IllegalArgumentException("Priority has to be one of the following values (low, medium or high)");
 
         this.id = id;
