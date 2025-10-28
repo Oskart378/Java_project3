@@ -1,18 +1,19 @@
+import java.util.Comparator;
 import java.util.HashSet;
 
-public class Ticket {
+public class Ticket implements Comparable<Ticket> {
 
     private static final HashSet<Integer> usedIds = new HashSet<>();
-    private int id;
-    private String name;
-    private String issue;
-    private String priority;
+    private final int id;
+    private final String name;
+    private final String issue;
+    private final String priority;
 
     public Ticket(int id, String name, String issue, String priority) {
 
         if (id < 0)
             throw new IllegalArgumentException("Id can't have negative values");
-        if (!isIdAvailable(id))
+        if (!Ticket.isIdAvailable(id))
             throw new IllegalArgumentException("Id is already used, try a different Id number");
         if (name == null || name.isBlank())
             throw new IllegalArgumentException("Name can't be blank or null");
@@ -28,7 +29,7 @@ public class Ticket {
         usedIds.add(id);
     }
 
-    private boolean isIdAvailable(int id) {
+    private static boolean isIdAvailable(int id) {
         return !usedIds.contains(id);
     }
 
@@ -56,11 +57,25 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", issue='" + issue + '\'' +
-                ", priority='" + priority + '\'' +
-                '}';
+        return String.format("[#%d] %s - %s (%s)", id, name, issue, priority);
+    }
+
+    @Override
+    public int compareTo(Ticket t) {
+        int thisItem = this.getPriorityNumericalValue();
+        int secondItem = t.getPriorityNumericalValue();
+
+        return thisItem - secondItem;
+
+    }
+
+    private int getPriorityNumericalValue () {
+
+        return switch (priority) {
+            case "high" -> 1;
+            case "medium" -> 2;
+            case "low" -> 3;
+            default -> throw new IllegalStateException("Unexpected value: " + priority);
+        };
     }
 }
