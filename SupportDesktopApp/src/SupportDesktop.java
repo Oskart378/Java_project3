@@ -1,17 +1,18 @@
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class SupportDesktop {
 
-    private final PriorityQueue<Ticket> activeTickets;
+    private final LinkedList<Ticket> activeTickets;
     private final Stack<Ticket> resolvedTickets;
 
     public SupportDesktop() {
-        activeTickets = new PriorityQueue<>();
+        activeTickets = new LinkedList<>();
         resolvedTickets = new Stack<>();
     }
 
     public void addTicket(Ticket t) {
-        activeTickets.enqueue(t);
+        activeTickets.addLast(t);
     }
 
     public void processNextTicket() {
@@ -21,7 +22,7 @@ public class SupportDesktop {
             return;
         }
 
-        Ticket removedTicket = activeTickets.dequeue();
+        Ticket removedTicket = activeTickets.removeFirst();
         resolvedTickets.push(removedTicket);
         System.out.println("Processing next ticket...");
         System.out.println("Ticket resolved: " + removedTicket);
@@ -68,7 +69,7 @@ public class SupportDesktop {
         }
 
         Ticket ticket = resolvedTickets.pop();
-        activeTickets.enqueue(ticket);
+        activeTickets.addLast(ticket);
         System.out.println("Reopened ticket: " + ticket);
     }
 }

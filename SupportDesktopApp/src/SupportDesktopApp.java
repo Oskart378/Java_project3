@@ -10,8 +10,6 @@ public class SupportDesktopApp {
     }
 
     public static void main(String[] args) {
-
-        SupportDesktop supportDesktop = new SupportDesktop();
         new SupportDesktopApp().run();
     }
 
