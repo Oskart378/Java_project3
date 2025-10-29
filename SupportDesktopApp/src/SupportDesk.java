@@ -1,12 +1,12 @@
 import java.util.LinkedList;
 import java.util.Stack;
 
-public class SupportDesktop {
+public class SupportDesk {
 
     private final LinkedList<Ticket> activeTickets;
     private final Stack<Ticket> resolvedTickets;
 
-    public SupportDesktop() {
+    public SupportDesk() {
         activeTickets = new LinkedList<>();
         resolvedTickets = new Stack<>();
     }
@@ -58,7 +58,15 @@ public class SupportDesktop {
             System.out.println("There is no active tickets at the moment");
             return;
         }
-        System.out.println(activeTickets);
+        //System.out.println(activeTickets);
+
+        StringBuilder listItems = new StringBuilder();
+
+        for (Ticket item : activeTickets)
+            listItems.append(item).append("\n");
+
+        System.out.println(listItems);
+
     }
 
     public void reopenLastResolved() {

@@ -12,9 +12,9 @@ public class Ticket implements Comparable<Ticket> {
     public Ticket(int id, String name, String issue, String priority) {
 
         if (id < 0)
-            throw new IllegalArgumentException("Id can't have negative values");
+            throw new IllegalArgumentException("id can't have negative values");
         if (!Ticket.isIdAvailable(id))
-            throw new IllegalArgumentException("Id is already used, try a different Id number");
+            throw new IllegalArgumentException("id is already used, try a different Id number");
         if (name == null || name.isBlank())
             throw new IllegalArgumentException("Name can't be blank or null");
         if(issue == null || issue.isBlank())
@@ -29,7 +29,7 @@ public class Ticket implements Comparable<Ticket> {
         usedIds.add(id);
     }
 
-    private static boolean isIdAvailable(int id) {
+    public static boolean isIdAvailable(int id) {
         return !usedIds.contains(id);
     }
 

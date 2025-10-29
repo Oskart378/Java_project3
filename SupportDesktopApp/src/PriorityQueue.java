@@ -17,7 +17,6 @@ public class PriorityQueue<E> {
         this.list = new LinkedList<>();
     }
 
-
     public void enqueue(E newItem) {
 
         if (isEmpty()) {

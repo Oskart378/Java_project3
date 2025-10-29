@@ -1,16 +1,16 @@
 import java.util.Scanner;
 
-public class SupportDesktopApp {
+public class SupportDeskApp {
 
     private static final Scanner input = new Scanner(System.in);
-    private final SupportDesktop supportDesktop;
+    private final SupportDesk supportDesk;
 
-    public SupportDesktopApp() {
-        this.supportDesktop = new SupportDesktop();
+    public SupportDeskApp() {
+        this.supportDesk = new SupportDesk();
     }
 
     public static void main(String[] args) {
-        new SupportDesktopApp().run();
+        new SupportDeskApp().run();
     }
 
     private static void pauseConsole() {
@@ -43,22 +43,22 @@ public class SupportDesktopApp {
     }
 
     private void processNextTicket() {
-        supportDesktop.processNextTicket();
+        supportDesk.processNextTicket();
         pauseConsole();
     }
 
     private void viewAllActiveTickets() {
-        supportDesktop.viewAllActiveTickets();
+        supportDesk.viewAllActiveTickets();
         pauseConsole();
     }
 
     private void viewRecentlyResolved() {
-        supportDesktop.viewRecentResolved();
+        supportDesk.viewRecentResolved();
         pauseConsole();
     }
 
     private void reopenLastResolved() {
-        supportDesktop.reopenLastResolved();
+        supportDesk.reopenLastResolved();
         pauseConsole();
     }
 
@@ -68,7 +68,7 @@ public class SupportDesktopApp {
             int id;
             String name, issue, priority;
 
-            System.out.println("Enter ticket ID:");
+            System.out.println("Enter ticket:");
             id = Integer.parseInt(input.nextLine());
 
             System.out.println("Enter requester name:");
@@ -80,7 +80,7 @@ public class SupportDesktopApp {
             System.out.println("Enter priority (Low/Medium/High):");
             priority = input.nextLine();
 
-            supportDesktop.addTicket(new Ticket(id, name, issue, priority));
+            supportDesk.addTicket(new Ticket(id, name, issue, priority));
             System.out.println("Ticket added successfully");
 
             pauseConsole();
@@ -94,6 +94,8 @@ public class SupportDesktopApp {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    
 
     private void printMenu() {
         System.out.println("\n===== Welcome to MDC Tech Support Ticket System =====");
