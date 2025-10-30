@@ -1,7 +1,6 @@
-import java.util.Comparator;
 import java.util.HashSet;
 
-public class Ticket implements Comparable<Ticket> {
+public class Ticket {
 
     private static final HashSet<Integer> usedIds = new HashSet<>();
     private final int id;
@@ -19,13 +18,13 @@ public class Ticket implements Comparable<Ticket> {
             throw new IllegalArgumentException("Name can't be blank or null");
         if(issue == null || issue.isBlank())
             throw new IllegalArgumentException("Issue can't be blank or null");
-        if(priority == null || !isValid(priority))
+        if(priority == null || !isPriorityValid(priority))
             throw new IllegalArgumentException("Priority has to be one of the following values (low, medium or high)");
 
         this.id = id;
-        this.name = name;
-        this.issue = issue;
-        this.priority = priority.toLowerCase();
+        this.name = name.trim();
+        this.issue = issue.trim();
+        this.priority = priority.toLowerCase().trim();
         usedIds.add(id);
     }
 
@@ -33,7 +32,7 @@ public class Ticket implements Comparable<Ticket> {
         return !usedIds.contains(id);
     }
 
-    private boolean isValid(String priority) {
+    public static boolean isPriorityValid(String priority) {
         priority = priority.toLowerCase();
         return (priority.equals("low") || priority.equals("medium") ||
                 priority.equals("high"));
@@ -58,24 +57,5 @@ public class Ticket implements Comparable<Ticket> {
     @Override
     public String toString() {
         return String.format("[#%d] %s - %s (%s)", id, name, issue, priority);
-    }
-
-    @Override
-    public int compareTo(Ticket t) {
-        int thisItem = this.getPriorityNumericalValue();
-        int secondItem = t.getPriorityNumericalValue();
-
-        return thisItem - secondItem;
-
-    }
-
-    private int getPriorityNumericalValue () {
-
-        return switch (priority) {
-            case "high" -> 1;
-            case "medium" -> 2;
-            case "low" -> 3;
-            default -> throw new IllegalStateException("Unexpected value: " + priority);
-        };
     }
 }

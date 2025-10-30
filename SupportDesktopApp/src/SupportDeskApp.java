@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class SupportDeskApp {
 
@@ -39,6 +41,8 @@ public class SupportDeskApp {
                     System.out.println("Thank you for using MDC Tech Support Ticket System!");
                     running = false;}
             }
+
+            clearScreen();
         }
     }
 
@@ -65,22 +69,8 @@ public class SupportDeskApp {
     private void addNewTicket() {
 
         try {
-            int id;
-            String name, issue, priority;
 
-            System.out.println("Enter ticket:");
-            id = Integer.parseInt(input.nextLine());
-
-            System.out.println("Enter requester name:");
-            name = input.nextLine();
-
-            System.out.println("Enter issue:");
-            issue = input.nextLine();
-
-            System.out.println("Enter priority (Low/Medium/High):");
-            priority = input.nextLine();
-
-            supportDesk.addTicket(new Ticket(id, name, issue, priority));
+            supportDesk.addTicket(createTicket());
             System.out.println("Ticket added successfully");
 
             pauseConsole();
@@ -95,7 +85,60 @@ public class SupportDeskApp {
         }
     }
 
-    
+    private Ticket createTicket() throws Exception{
+
+        int id;
+        String name, issue, priority;
+
+        id =  promptTicketId();
+
+        name = promptTicketInfo("Enter requester name: ", "Name can't be blank or null");
+
+        issue = promptTicketInfo("Enter issue: ", "issue can't be blank or null");
+
+        priority = promptTicketPriority();
+
+        return new Ticket(id, name, issue, priority);
+    }
+
+    private int promptTicketId() {
+
+        while (true){
+            System.out.print("Enter ticket id: ");
+            int id = Integer.parseInt(input.nextLine());
+            if (Ticket.isIdAvailable(id))
+                return id;
+
+            System.out.println("id is already used, try a different Id number");
+        }
+    }
+
+    private String promptTicketInfo(String prompt, String errorMsg) {
+
+        while (true) {
+            System.out.print(prompt);
+            String info = input.nextLine();
+
+            if (info != null && !info.isBlank())
+                return info;
+
+            else
+                System.out.println(errorMsg);
+        }
+    }
+
+    private String promptTicketPriority() {
+
+        while (true) {
+            System.out.print("Enter priority (Low/Medium/High): ");
+            String priority = input.nextLine();
+
+            if (Ticket.isPriorityValid(priority))
+                return priority;
+            else
+                System.out.println("Priority has to be one of the following values (low, medium or high)");
+        }
+    }
 
     private void printMenu() {
         System.out.println("\n===== Welcome to MDC Tech Support Ticket System =====");
@@ -105,11 +148,13 @@ public class SupportDeskApp {
         System.out.println("4. View recently resolved tickets");
         System.out.println("5. Reopen last resolved tickets");
         System.out.println("6. Exit\n");
-        System.out.print("Enter your choice: ");
     }
+
+
 
     private int promptMenuChoice() {
         while (true){
+            System.out.print("Enter your choice: ");
             String inputStr = input.nextLine().trim();
             if (inputStr.isEmpty()) {
                 System.out.println("Please enter a valid choice between 1 and 6.");
@@ -127,6 +172,12 @@ public class SupportDeskApp {
                 System.out.println("Please enter a valid choice between 1 and 6.");
             }
 
+        }
+    }
+
+    public static void clearScreen() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
         }
     }
 }
