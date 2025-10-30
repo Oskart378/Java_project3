@@ -20,7 +20,7 @@ public class SupportDeskApp {
 
         while (input.hasNextLine()) {
             String line = input.nextLine();
-            if (line.isEmpty()) break; // stop only when the user really just hits enter
+            if (line.isEmpty()) break;
         }
     }
 
@@ -37,12 +37,14 @@ public class SupportDeskApp {
                 case 3 -> viewAllActiveTickets();
                 case 4 -> viewRecentlyResolved();
                 case 5 -> reopenLastResolved();
-                case 6-> {
+                case 6 -> {
                     System.out.println("Thank you for using MDC Tech Support Ticket System!");
-                    running = false;}
+                    running = false;
+                }
             }
 
-            clearScreen();
+            if (running)
+                clearScreen();
         }
     }
 
@@ -67,76 +69,65 @@ public class SupportDeskApp {
     }
 
     private void addNewTicket() {
-
         try {
-
             supportDesk.addTicket(createTicket());
             System.out.println("Ticket added successfully");
-
             pauseConsole();
-        }
-
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             System.out.println("Try to enter data in the correct format: " + e.getMessage());
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-    private Ticket createTicket() throws Exception{
+    private Ticket createTicket() throws Exception {
+        int id = promptInput(
+                "Enter ticket ID: ",
+                Integer::parseInt,             // converter from String to Integer
+                n -> n > 0 && Ticket.isIdAvailable(n),  // predicate for validation
+                "Invalid ID or ID already used. Please enter a positive, unused number."
+        );
 
-        int id;
-        String name, issue, priority;
+        String name = promptInput(
+                "Enter requester name: ",
+                s -> s,                       // converter is identity for String
+                s -> !s.isBlank(),
+                "Name can't be blank or null."
+        );
 
-        id =  promptTicketId();
+        String issue = promptInput(
+                "Enter issue: ",
+                s -> s,
+                s -> !s.isBlank(),
+                "Issue can't be blank or null."
+        );
 
-        name = promptTicketInfo("Enter requester name: ", "Name can't be blank or null");
-
-        issue = promptTicketInfo("Enter issue: ", "issue can't be blank or null");
-
-        priority = promptTicketPriority();
-
+        String priority = promptInput(
+                "Enter priority (Low/Medium/High): ",
+                s -> s,
+                Ticket::isPriorityValid,
+                "Priority must be one of the following: Low, Medium, High."
+        );
         return new Ticket(id, name, issue, priority);
     }
 
-    private int promptTicketId() {
-
-        while (true){
-            System.out.print("Enter ticket id: ");
-            int id = Integer.parseInt(input.nextLine());
-            if (Ticket.isIdAvailable(id))
-                return id;
-
-            System.out.println("id is already used, try a different Id number");
-        }
-    }
-
-    private String promptTicketInfo(String prompt, String errorMsg) {
-
+    // Generic readInput method
+    private <T> T promptInput(String prompt, Function<String, T> converter, Predicate<T> checker, String errorMsg) {
         while (true) {
             System.out.print(prompt);
-            String info = input.nextLine();
+            String line = input.nextLine();
 
-            if (info != null && !info.isBlank())
-                return info;
+            try {
+                T value = converter.apply(line);// convert String to T
 
-            else
+                if (checker.test(value))
+                    return value;  // check validity
+                else
+                    System.out.println(errorMsg);
+
+            } catch (Exception e) {
                 System.out.println(errorMsg);
-        }
-    }
-
-    private String promptTicketPriority() {
-
-        while (true) {
-            System.out.print("Enter priority (Low/Medium/High): ");
-            String priority = input.nextLine();
-
-            if (Ticket.isPriorityValid(priority))
-                return priority;
-            else
-                System.out.println("Priority has to be one of the following values (low, medium or high)");
+            }
         }
     }
 
@@ -150,28 +141,23 @@ public class SupportDeskApp {
         System.out.println("6. Exit\n");
     }
 
-
-
     private int promptMenuChoice() {
-        while (true){
+        while (true) {
             System.out.print("Enter your choice: ");
             String inputStr = input.nextLine().trim();
             if (inputStr.isEmpty()) {
                 System.out.println("Please enter a valid choice between 1 and 6.");
                 continue;
             }
-
             try {
                 int choice = Integer.parseInt(inputStr);
                 if (choice >= 1 && choice <= 6)
                     return choice;
                 else
                     System.out.println("Please enter a valid choice between 1 and 6.");
-
             } catch (NumberFormatException ex) {
                 System.out.println("Please enter a valid choice between 1 and 6.");
             }
-
         }
     }
 

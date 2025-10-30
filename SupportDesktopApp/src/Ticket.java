@@ -51,11 +51,11 @@ public class Ticket {
     }
 
     public String getPriority() {
-        return priority;
+        return priority.substring(0, 1).toUpperCase() + priority.substring(1);
     }
 
     @Override
     public String toString() {
-        return String.format("[#%d] %s - %s (%s)", id, name, issue, priority);
+        return String.format("[#%d] %s - %s (%s)", id, name, issue, getPriority());
     }
 }
